@@ -13,6 +13,6 @@ COPY src/ /app/src/
 RUN mkdir -p /app/data
 
 ENV PYTHONUNBUFFERED=1
-EXPOSE 8088
 
+EXPOSE 8088
 CMD ["python", "-m", "src.main"]
