@@ -1,4 +1,3 @@
-cat > src/classify.py <<'PY'
 from .config import SECURITY_KEYWORDS
 
 def classify_security(event: dict) -> dict:
