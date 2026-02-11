@@ -1,4 +1,4 @@
-  from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query
 from .db import init_db, query_events
 from .digest import build_digest
 from .config import DEFAULT_GA_ONLY
