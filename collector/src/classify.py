@@ -38,4 +38,3 @@ def _guess_category(hay: str) -> str:
     if any(w in hay for w in ["policy", "audit", "logging", "compliance", "governance"]):
         return "Compliance"
     return "Other"
-PY
