@@ -1,0 +1,83 @@
+openapi: 3.1.1
+info:
+  title: Azure & M365 Changes Digest
+  version: "1.0"
+servers:
+  - url: <yours>
+
+paths:
+  /webhook/azure-digest:
+    get:
+      operationId: getDigest
+      summary: Get the latest digest
+      parameters:
+        - in: query
+          name: hours
+          schema:
+            type: integer
+            default: 24
+            minimum: 1
+            maximum: 168
+        - in: query
+          name: ga_only
+          schema:
+            type: boolean
+            default: true
+        - in: query
+          name: security_only
+          schema:
+            type: boolean
+            default: true
+      responses:
+        "200":
+          description: Digest response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DigestResponse"
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+  schemas:
+    DigestResponse:
+      type: object
+      properties:
+        generated_at:
+          type: string
+        window_hours:
+          type: integer
+        security_only:
+          type: boolean
+        ga_only:
+          type: boolean
+        count:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              event_id: { type: string }
+              change_type: { type: string }
+              source: { type: string }
+              source_url: { type: string }
+              title: { type: string }
+              summary: { type: string, nullable: true }
+              product: { type: string, nullable: true }
+              release_stage: { type: string, nullable: true }
+              published_at: { type: string, nullable: true }
+              updated_at: { type: string, nullable: true }
+              security_relevant: { type: boolean }
+              security_reason: { type: string, nullable: true }
+              category: { type: string, nullable: true }
+              impact: { type: string, nullable: true }
+              recommended_action: { type: string, nullable: true }
+            additionalProperties: true
+      additionalProperties: true
+
+security:
+  - ApiKeyAuth: []
