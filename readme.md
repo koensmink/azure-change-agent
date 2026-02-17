@@ -127,26 +127,3 @@ Point your agent Action to:
     https://<your-n8n-domain>/webhook/azure-digest
 
 Response format: structured JSON digest.
-
-------------------------------------------------------------------------
-
-## Recommended Hardening
-
--   Replace client secret with certificate authentication
--   Place n8n behind reverse proxy with TLS
--   Add rate limiting
--   Restrict webhook exposure (IP allowlist / Zero Trust access)
-
-------------------------------------------------------------------------
-
-## Maintenance Notes
-
--   Graph paging can be extended if volume increases
--   Detail parsing logic may require updates if Microsoft changes markup
--   Consider moving to PostgreSQL for higher scale environments
-
-------------------------------------------------------------------------
-
-## License
-
-Internal enterprise tooling. Adjust as required.
