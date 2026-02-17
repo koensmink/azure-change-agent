@@ -1,6 +1,6 @@
 Privacy Policy – Azure & M365 Change Digest Agent
 
-Last updated: 12 February 2026
+Last updated: 17 February 2026
 
 1. Purpose
 
@@ -45,4 +45,4 @@ Each operates under their respective privacy policies.
 
 7. Contact
 
-For questions regarding this service:
+For questions regarding this service see the Github profile details
