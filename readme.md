@@ -113,11 +113,7 @@ This enables downstream filtering and reporting.
 The bridge exposes:
 
     /webhook/azure-digest
-
-Header required:
-
-    x-api-key: <N8N_DIGEST_API_KEY>
-
+    
 ------------------------------------------------------------------------
 
 ## Example OpenAI Agent Integration
@@ -133,4 +129,5 @@ Response format: structured JSON digest.
 ## Current development
 -   More AI context what the impact is
 -   Write data to Postgres database
--   Code efficiency 
+-   Code efficiency
+-   Cloudflare Access (Zero trust network configuration) 
