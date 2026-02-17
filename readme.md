@@ -127,3 +127,10 @@ Point your agent Action to:
     https://<your-n8n-domain>/webhook/azure-digest
 
 Response format: structured JSON digest.
+
+------------------------------------------------------------------------
+
+## Current development
+-   More AI context what the impact is
+-   Write data to Postgres database
+-   Code efficiency 
