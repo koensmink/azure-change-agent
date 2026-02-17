@@ -3,8 +3,7 @@ info:
   title: Azure & M365 Changes Digest
   version: "1.0"
 servers:
-  - url: <yours>
-
+  - url: https://<URL>
 paths:
   /webhook/azure-digest:
     get:
@@ -35,7 +34,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DigestResponse"
-
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -61,23 +59,46 @@ components:
           items:
             type: object
             properties:
-              event_id: { type: string }
-              change_type: { type: string }
-              source: { type: string }
-              source_url: { type: string }
-              title: { type: string }
-              summary: { type: string, nullable: true }
-              product: { type: string, nullable: true }
-              release_stage: { type: string, nullable: true }
-              published_at: { type: string, nullable: true }
-              updated_at: { type: string, nullable: true }
-              security_relevant: { type: boolean }
-              security_reason: { type: string, nullable: true }
-              category: { type: string, nullable: true }
-              impact: { type: string, nullable: true }
-              recommended_action: { type: string, nullable: true }
+              event_id:
+                type: string
+              change_type:
+                type: string
+              source:
+                type: string
+              source_url:
+                type: string
+              title:
+                type: string
+              summary:
+                type: string
+                nullable: true
+              product:
+                type: string
+                nullable: true
+              release_stage:
+                type: string
+                nullable: true
+              published_at:
+                type: string
+                nullable: true
+              updated_at:
+                type: string
+                nullable: true
+              security_relevant:
+                type: boolean
+              security_reason:
+                type: string
+                nullable: true
+              category:
+                type: string
+                nullable: true
+              impact:
+                type: string
+                nullable: true
+              recommended_action:
+                type: string
+                nullable: true
             additionalProperties: true
       additionalProperties: true
-
 security:
   - ApiKeyAuth: []
