@@ -33,8 +33,9 @@ When the OpenAI agent calls the webhook:
 	•	API key authentication for webhook access.
 	•	Local container network isolation.
 	•	No public database exposure.
-
-6. Third-Party Services
+	•	All data is public available.
+	
+7. Third-Party Services
 
 This system interacts with:
 	•	Microsoft Graph API
