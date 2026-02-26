@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy — Azure &amp; M365 Change Digest Agent</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --card:#111826;
+      --text:#e6edf3;
+      --muted:#9fb0c0;
+      --border:rgba(255,255,255,.08);
+      --max: 920px;
+      --pad: 24px;
+      --radius: 14px;
+      --shadow: 0 8px 30px rgba(0,0,0,.35);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    }
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f8fa;
+        --card:#ffffff;
+        --text:#0b1220;
+        --muted:#44576a;
+        --border:rgba(0,0,0,.08);
+        --shadow: 0 10px 26px rgba(0,0,0,.08);
+      }
+    }
+    body{ margin:0; font-family:var(--sans); background:var(--bg); color:var(--text); line-height:1.65; }
+    .wrap{ max-width:var(--max); margin:48px auto; padding:0 16px; }
+    .card{ background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:var(--pad); }
+    header{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--border); }
+    h1{ font-size:20px; margin:0; letter-spacing:.2px; }
+    .meta{ font-family:var(--mono); font-size:12px; color:var(--muted); white-space:nowrap; }
+    h2{ font-size:16px; margin:22px 0 8px; }
+    p{ margin:10px 0; }
+    ul{ margin:10px 0 10px 20px; }
+    li{ margin:6px 0; }
+    code{ font-family:var(--mono); font-size: 0.95em; }
+    .note{ margin-top:18px; padding:12px 14px; border:1px dashed var(--border); border-radius:12px; color:var(--muted); font-size:14px; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" aria-labelledby="title">
+      <header>
+        <h1 id="title">Privacy Policy – Azure &amp; M365 Change Digest Agent</h1>
+        <div class="meta">Last updated: 17 February 2026</div>
+      </header>
+
+      <article>
+        <h2>1. Purpose</h2>
+        <p>
+          This service provides automated summaries of Microsoft Azure and Microsoft 365 change announcements
+          using a locally hosted change collector and n8n webhook integration.
+        </p>
+
+        <h2>2. Data Processed</h2>
+        <p>The service processes the following data:</p>
+        <ul>
+          <li>Public Microsoft change announcements (Azure, Microsoft 365, Defender, Intune, Entra)</li>
+          <li>Metadata such as title, summary, source URL, release stage, timestamps</li>
+          <li>Query parameters sent to the webhook (<code>hours</code>, <code>ga_only</code>, <code>security_only</code>)</li>
+        </ul>
+        <p>No personal data of end users is collected or stored.</p>
+
+        <h2>3. Data Storage</h2>
+        <ul>
+          <li>Change data is stored locally within a self-hosted container environment.</li>
+          <li>Storage backend: local SQLite database.</li>
+          <li>No data is shared with third parties beyond Microsoft Graph APIs used for ingestion.</li>
+        </ul>
+
+        <h2>4. Data Transmission</h2>
+        <p>When the OpenAI agent calls the webhook:</p>
+        <ul>
+          <li>Only request parameters are transmitted.</li>
+          <li>No user-identifiable content is forwarded.</li>
+          <li>The webhook requires an API key header for authentication.</li>
+          <li>IP whitelisting is active.</li>
+        </ul>
+
+        <h2>5. Security Measures</h2>
+        <ul>
+          <li>HTTPS enforced via reverse proxy.</li>
+          <li>API key authentication for webhook access.</li>
+          <li>Local container network isolation.</li>
+          <li>No public database exposure.</li>
+          <li>All data is publicly available.</li>
+        </ul>
+
+        <h2>6. Third-Party Services</h2>
+        <p>This system interacts with:</p>
+        <ul>
+          <li>Microsoft Graph API</li>
+          <li>OpenAI platform (for agent interaction)</li>
+        </ul>
+        <p>Each operates under their respective privacy policies.</p>
+
+        <div class="note">
+          Operational note: This page is static. Updating the policy only requires editing this file and reloading the page.
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
