@@ -3,9 +3,9 @@ info:
   title: Azure & M365 Changes Digest
   version: "1.0"
 servers:
-  - url: https://<URL>
+  - url: https://<URL> #MAIN URL .EXTENSION
 paths:
-  /webhook/azure-digest:
+  /<SUB>: #SUBURL
     get:
       operationId: getDigest
       summary: Get the latest digest
