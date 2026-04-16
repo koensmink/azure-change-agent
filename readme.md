@@ -1,133 +1,104 @@
-# Microsoft Azure + M365 Changes Collector
+# Azure + M365 Change Collector
 
-Enterprise-grade local change intelligence pipeline for:
+Een lightweight, self-hosted collector die wijzigingen uit Microsoft-platformen ophaalt,
+normaliseert, opslaat en beschikbaar maakt via een JSON API én een weboverzicht.
 
--   Azure Updates
--   Microsoft 365 Roadmap
--   Microsoft Graph Message Center (Service Communications API)
--   Microsoft Intune "What's New"
--   Microsoft Defender "What's New"
--   Microsoft Entra "What's New"
+## Wat doet deze service?
 
-This stack collects change announcements locally, normalizes them,
-detects diffs via hashing, and exposes a clean API endpoint for
-downstream automation (n8n, dashboards, OpenAI agents, reporting
-pipelines).
+- Haalt updates op uit meerdere Microsoft-bronnen.
+- Zet ruwe data om naar één uniform event-model.
+- Detecteert echte inhoudelijke wijzigingen via hashing (`NEW`, `CHANGED`, `UNCHANGED`).
+- Slaat data op in database (PostgreSQL via Docker Compose, met SQLite fallback).
+- Biedt API-endpoints voor automatisering (n8n, agents, dashboards).
+- Biedt een browserpagina om events direct te bekijken (`/events/web`).
 
-------------------------------------------------------------------------
+---
 
-## Architecture Overview
+## Ondersteunde bronnen
 
-### Components
+- Azure Updates
+- Microsoft 365 Roadmap
+- Microsoft Graph Message Center (Service Communications API)
+- Intune "What's New"
+- Defender "What's New"
+- Entra "What's New"
 
-**Collector (FastAPI)** - Scheduled ingestion via cron - Per-source
-index + detail parsing - `event_id` (stable identifier) - `content_hash`
-(change detection) - NEW / CHANGED detection - GA filtering - Security
-relevance tagging
+---
 
-**n8n Bridge** - Secured webhook endpoint - Pulls `/digest` - Optional
-XLSX export - Can be used as OpenAI Agent Action endpoint
+## Architectuur (kort)
 
-**Storage** - SQLite (local persistent volume) - Change tracking per
-event
+### Collector (FastAPI)
 
-------------------------------------------------------------------------
+- Draait ingest op basis van cron
+- Verwerkt index + detail per bron
+- Maakt stabiele `event_id`
+- Gebruikt `content_hash` voor changedetection
+- Labelt security-relevantie en release stage
 
-## Data Model
+### Opslag
 
-Each event contains:
+- **Standaard in Compose:** PostgreSQL
+- **Fallback:** SQLite (als `DATABASE_URL` niet is gezet)
 
--   `event_id`
--   `content_hash`
--   `change_type` (NEW \| CHANGED \| UNCHANGED)
--   `source`
--   `release_stage` (GA \| Preview \| Planned \| Retirement \| Unknown)
--   `security_relevant`
--   `category`
--   `impact`
--   `recommended_action`
+### Exposed endpoints
 
-Hashing ensures only meaningful content changes trigger updates.
+- `GET /health` → health check
+- `GET /events` → genormaliseerde events (filterbaar)
+- `GET /digest` → samenvatting/digest
+- `GET /events/web` → weboverzicht van events uit database
 
-------------------------------------------------------------------------
+---
 
-## Deployment
+## Snel starten
 
-### 1. Configure Environment
+### 1) Configureer
 
-Copy `.env.example` to `.env` and configure:
+```bash
+cp .env.example .env
+```
 
-    GRAPH_TENANT_ID=
-    GRAPH_CLIENT_ID=
-    GRAPH_CLIENT_SECRET=
-    N8N_DIGEST_API_KEY=
+Vul minimaal in:
 
-### 2. Build & Run
+```bash
+GRAPH_TENANT_ID=
+GRAPH_CLIENT_ID=
+GRAPH_CLIENT_SECRET=
+N8N_DIGEST_API_KEY=
+DATABASE_URL=postgresql://collector:collector@postgres:5432/collector
+```
 
-    docker compose build --no-cache
-    docker compose up -d
+> Laat je `DATABASE_URL` weg, dan valt de app terug op SQLite (`/app/data/events.db`).
 
-### 3. Validate
+### 2) Start de stack
 
-Health endpoint:
+```bash
+docker compose build --no-cache
+docker compose up -d
+```
 
-    http://localhost:8088/health
+### 3) Controleer
 
-Digest endpoint:
+- Health: <http://localhost:8088/health>
+- Events API: <http://localhost:8088/events>
+- Digest API: <http://localhost:8088/digest?hours=24&ga_only=true&security_only=true>
+- Weboverzicht: <http://localhost:8088/events/web>
 
-    http://localhost:8088/digest?hours=24&ga_only=true&security_only=true
+---
 
-------------------------------------------------------------------------
-
-## Required Microsoft Graph Permissions
+## Vereiste Microsoft Graph permissie
 
 Application permission:
 
--   `ServiceMessage.Read.All`
+- `ServiceMessage.Read.All`
 
-Grant admin consent after assigning permission.
+Vergeet niet **admin consent** te geven.
 
-------------------------------------------------------------------------
+---
 
-## GA Filtering Logic
+## Veelgebruikte use-cases
 
-GA filtering uses:
-
--   M365 Roadmap: `Status == Launched`
--   Azure / Learn pages: textual detection of "General Availability"
--   Message Center: heuristic detection (where applicable)
-
-------------------------------------------------------------------------
-
-## Security Classification
-
-Keyword-based classification detects identity, endpoint, networking,
-compliance and security changes.
-
-This enables downstream filtering and reporting.
-
-------------------------------------------------------------------------
-
-## n8n Webhook Usage
-
-The bridge exposes:
-
-    /webhook/azure-digest
-    
-------------------------------------------------------------------------
-
-## Example OpenAI Agent Integration
-
-Point your agent Action to:
-
-    https://<your-n8n-domain>/webhook/azure-digest
-
-Response format: structured JSON digest.
-
-------------------------------------------------------------------------
-
-## Current development
--   More AI context what the impact is
--   Write data to Postgres database
--   Code efficiency
--   Cloudflare Access (Zero trust network configuration) 
+- Security monitoring van Microsoft platformwijzigingen
+- Compliance/impact-overzichten
+- Input voor SOC/SIEM enrichment
+- Interne wijzigingsdashboards
+- Geautomatiseerde rapportages via n8n of agents
