@@ -1,6 +1,6 @@
 # Microsoft Azure + M365 Changes Collector
 
-Enterprise-grade local change intelligence pipeline for:
+Local running change intelligence pipeline for collecting:
 
 -   Azure Updates
 -   Microsoft 365 Roadmap
@@ -11,8 +11,7 @@ Enterprise-grade local change intelligence pipeline for:
 
 This stack collects change announcements locally, normalizes them,
 detects diffs via hashing, and exposes a clean API endpoint for
-downstream automation (n8n, dashboards, OpenAI agents, reporting
-pipelines).
+downstream automation. 
 
 ------------------------------------------------------------------------
 
@@ -60,7 +59,7 @@ Copy `.env.example` to `.env` and configure:
     GRAPH_TENANT_ID=
     GRAPH_CLIENT_ID=
     GRAPH_CLIENT_SECRET=
-    N8N_DIGEST_API_KEY=
+    N8N_DIGEST_API_KEY= #optional
 
 ### 2. Build & Run
 
