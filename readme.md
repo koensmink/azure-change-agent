@@ -28,7 +28,7 @@ relevance tagging
 **n8n Bridge** - Secured webhook endpoint - Pulls `/digest` - Optional
 XLSX export - Can be used as OpenAI Agent Action endpoint
 
-**Storage** - SQLite (local persistent volume) - Change tracking per
+**Storage** - PostgreSQL (default via Docker Compose) with SQLite fallback - Change tracking per
 event
 
 ------------------------------------------------------------------------
@@ -61,11 +61,14 @@ Copy `.env.example` to `.env` and configure:
     GRAPH_CLIENT_ID=
     GRAPH_CLIENT_SECRET=
     N8N_DIGEST_API_KEY=
+    DATABASE_URL=postgresql://collector:collector@postgres:5432/collector
 
 ### 2. Build & Run
 
     docker compose build --no-cache
     docker compose up -d
+
+This starts both the collector and a Postgres service.
 
 ### 3. Validate
 
@@ -76,6 +79,10 @@ Health endpoint:
 Digest endpoint:
 
     http://localhost:8088/digest?hours=24&ga_only=true&security_only=true
+
+Weboverzicht (database):
+
+    http://localhost:8088/events/web
 
 ------------------------------------------------------------------------
 
