@@ -7,3 +7,4 @@ python-dateutil==2.9.0.post0
 pydantic==2.10.6
 croniter==3.0.3
 feedparser==6.0.11
+psycopg[binary]==3.2.9
