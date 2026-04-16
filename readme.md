@@ -1,133 +1,162 @@
-# Microsoft Azure + M365 Changes Collector
+# Azure + M365 Change Collector
 
-Enterprise-grade local change intelligence pipeline for:
+Lightweight local pipeline for collecting, normalizing and tracking
+changes across Microsoft services.
 
--   Azure Updates
--   Microsoft 365 Roadmap
--   Microsoft Graph Message Center (Service Communications API)
--   Microsoft Intune "What's New"
--   Microsoft Defender "What's New"
--   Microsoft Entra "What's New"
+## ✨ Features
 
-This stack collects change announcements locally, normalizes them,
-detects diffs via hashing, and exposes a clean API endpoint for
-downstream automation (n8n, dashboards, OpenAI agents, reporting
-pipelines).
+-   Collects updates from multiple Microsoft sources
+-   Detects meaningful changes via hashing (no noise)
+-   Filters on GA releases and security relevance
+-   Exposes clean JSON API for automation
+-   Easy integration with n8n, dashboards and agents
+-   Fully self-hosted
 
 ------------------------------------------------------------------------
 
-## Architecture Overview
+## 📦 Supported Sources
 
-### Components
-
-**Collector (FastAPI)** - Scheduled ingestion via cron - Per-source
-index + detail parsing - `event_id` (stable identifier) - `content_hash`
-(change detection) - NEW / CHANGED detection - GA filtering - Security
-relevance tagging
-
-**n8n Bridge** - Secured webhook endpoint - Pulls `/digest` - Optional
-XLSX export - Can be used as OpenAI Agent Action endpoint
-
-**Storage** - SQLite (local persistent volume) - Change tracking per
-event
+-   Azure updates\
+-   Microsoft 365 roadmap\
+-   Microsoft Graph Message Center (Service Communications API)\
+-   Intune "What's New"\
+-   Defender "What's New"\
+-   Entra "What's New"
 
 ------------------------------------------------------------------------
 
-## Data Model
+## 🏗️ Architecture
+
+### Collector (FastAPI)
+
+-   Scheduled ingestion (cron)
+-   Source-specific parsing (index + detail)
+-   Stable `event_id`
+-   `content_hash` for change detection
+-   Tracks: `NEW`, `CHANGED`, `UNCHANGED`
+-   GA filtering
+-   Security tagging
+
+### n8n Bridge
+
+-   Webhook endpoint
+-   Pulls `/digest`
+-   Optional XLSX export
+-   Can be used as OpenAI Action endpoint
+
+### Storage
+
+-   SQLite (local persistent volume)
+-   Tracks state per event
+
+------------------------------------------------------------------------
+
+## 📊 Data Model
 
 Each event contains:
 
 -   `event_id`
 -   `content_hash`
--   `change_type` (NEW \| CHANGED \| UNCHANGED)
+-   `change_type` (`NEW | CHANGED | UNCHANGED`)
 -   `source`
--   `release_stage` (GA \| Preview \| Planned \| Retirement \| Unknown)
+-   `release_stage` (`GA | Preview | Planned | Retirement | Unknown`)
 -   `security_relevant`
 -   `category`
 -   `impact`
 -   `recommended_action`
 
-Hashing ensures only meaningful content changes trigger updates.
+Only real content changes trigger updates.
 
 ------------------------------------------------------------------------
 
-## Deployment
+## 🚀 Getting Started
 
-### 1. Configure Environment
+### 1. Configure
 
-Copy `.env.example` to `.env` and configure:
+``` bash
+cp .env.example .env
+```
 
-    GRAPH_TENANT_ID=
-    GRAPH_CLIENT_ID=
-    GRAPH_CLIENT_SECRET=
-    N8N_DIGEST_API_KEY=
+Set:
 
-### 2. Build & Run
+``` bash
+GRAPH_TENANT_ID=
+GRAPH_CLIENT_ID=
+GRAPH_CLIENT_SECRET=
+N8N_DIGEST_API_KEY=
+```
 
-    docker compose build --no-cache
-    docker compose up -d
+### 2. Run
 
-### 3. Validate
+``` bash
+docker compose build --no-cache
+docker compose up -d
+```
 
-Health endpoint:
+### 3. Verify
+
+Health:
 
     http://localhost:8088/health
 
-Digest endpoint:
+Digest:
 
     http://localhost:8088/digest?hours=24&ga_only=true&security_only=true
 
 ------------------------------------------------------------------------
 
-## Required Microsoft Graph Permissions
+## 🔐 Microsoft Graph Permissions
 
-Application permission:
+Required application permission:
 
 -   `ServiceMessage.Read.All`
 
-Grant admin consent after assigning permission.
+Admin consent is required.
 
 ------------------------------------------------------------------------
 
-## GA Filtering Logic
+## 🧠 Filtering Logic
 
-GA filtering uses:
+**GA filtering** - M365 Roadmap → `Status == Launched` - Azure / Learn →
+text detection ("General Availability") - Message Center → heuristic
+detection
 
--   M365 Roadmap: `Status == Launched`
--   Azure / Learn pages: textual detection of "General Availability"
--   Message Center: heuristic detection (where applicable)
-
-------------------------------------------------------------------------
-
-## Security Classification
-
-Keyword-based classification detects identity, endpoint, networking,
-compliance and security changes.
-
-This enables downstream filtering and reporting.
+**Security tagging** - Keyword-based classification (identity, endpoint,
+networking, compliance)
 
 ------------------------------------------------------------------------
 
-## n8n Webhook Usage
+## 🔗 Integration
 
-The bridge exposes:
+### n8n
+
+Webhook endpoint:
 
     /webhook/azure-digest
-    
-------------------------------------------------------------------------
 
-## Example OpenAI Agent Integration
+### OpenAI / Agents
 
-Point your agent Action to:
+Use as Action endpoint:
 
     https://<your-n8n-domain>/webhook/azure-digest
 
-Response format: structured JSON digest.
+Returns structured JSON digest.
 
 ------------------------------------------------------------------------
 
-## Current development
--   More AI context what the impact is
--   Write data to Postgres database
--   Code efficiency
--   Cloudflare Access (Zero trust network configuration) 
+## 📌 Use Cases
+
+-   Security change monitoring
+-   Compliance tracking (NIS2 / ISO)
+-   SOC enrichment pipelines
+-   Internal change dashboards
+-   Automated reporting
+
+------------------------------------------------------------------------
+
+## 🛣️ Roadmap
+
+-   Improved impact/context (AI-assisted)
+-   Optional Postgres backend
+-   Performance optimizations
+-   Cloudflare Access integration
